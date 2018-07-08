@@ -1,0 +1,23 @@
+body
+{
+	border-color: #B22222;
+	border-style: solid;
+	border-width: 15px;
+	padding: 10px;
+	text-align: center;
+}
+
+h2
+{
+	border: 10px solid transparent;
+	padding: 10px;
+	-webkit-border-image: url("images/border.png") 30 round;
+	-o-border-image: url("images/border.png") 30 round;
+    border-image: url("images/border.png") 30 round;
+}
+
+#reviewImage
+{
+  width: 500px;
+  height: 400px;
+}

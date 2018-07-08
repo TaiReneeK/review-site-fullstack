@@ -4,6 +4,8 @@
 
 <head>
 	<title>Review</title>
+
+	<link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
 
@@ -13,7 +15,7 @@
 
 	<div th:each="review: ${reviews}">
 		<h2 th:text="${review.name}"></h2>
-		<img th:src = "${review.image}">
+		<img id="reviewImage" th:src = "${review.image}">
 		<p th:text="${review.description}"></p>
 		<p th:text="${review.beverage.beverage}"></p>
 

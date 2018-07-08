@@ -46,10 +46,10 @@ public class ReviewPopulator implements CommandLineRunner
 		Category wine = new Category("wine");
 		wine = categoryRepo.save(wine);
 		
-		reviewRepo.save(new Review("Dukin Doughnuts", "So good 24-7!", " ", coffee, hot, cold, nonAlcoholic));
-		reviewRepo.save(new Review("Peppermint Tea", "It is delicious.", " ", tea, hot, cold, nonAlcoholic));
-		reviewRepo.save(new Review("Guniness", "It's for the God's!", " ", beer, dark, cold, alcoholic));
-		reviewRepo.save(new Review("Red Wine", "For long days...", " ", wine, red, cold, alcoholic));
+		reviewRepo.save(new Review("Dukin Doughnuts", "So good 24-7!", "/images/coffee.jpg", coffee, hot, cold, nonAlcoholic));
+		reviewRepo.save(new Review("Peppermint Tea", "It is delicious.", "/images/pepperminttea.jpg", tea, hot, cold, nonAlcoholic));
+		reviewRepo.save(new Review("Guniness", "It's for the God's!", "/images/guniness.jpg", beer, dark, cold, alcoholic));
+		reviewRepo.save(new Review("Red Wine", "For long days...", "/images/redwine.jpg", wine, red, cold, alcoholic));
 	}
 	
 	
