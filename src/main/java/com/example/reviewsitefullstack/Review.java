@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -31,6 +32,9 @@ public class Review
 
 	@ManyToMany
 	private Collection<Tag> tags;
+	
+	@OneToMany(mappedBy = "review")
+	private Collection<Comment> comment;
 
 
 	public Review(String name, String description, String image, Category beverage, Tag...tags) 
@@ -75,6 +79,10 @@ public class Review
 		return tags;
 	}
 	
+	public Collection<Comment> getComment() {
+		return comment;
+	}
+	
 	@Override
 	public int hashCode() 
 	{
@@ -99,4 +107,18 @@ public class Review
 		return true;
 	}
 
+	//allowing the collection to add this tag created in form
+	public void addTag(Tag newTag) {
+		tags.add(newTag);
+	}
+
+	//allowing the collection to remove tag
+	public void removeTag(Tag tagToRemove) {
+		tags.remove(tagToRemove);
+	}
+
+	public void removeComment(Comment commentToRemove) {
+		comment.remove(commentToRemove);
+	}
+	
 }

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Comments</title>
+</head>
+
+<body>
+
+		<h2>List of Comments</h2>
+
+	<div th:each="comment: ${comments}">
+			<a th:href="@{/comment(id=${comment.id})}" th:text="${comment.content}"></a>
+	</div>
+
+</body>
+</html>

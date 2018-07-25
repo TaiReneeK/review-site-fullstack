@@ -35,6 +35,9 @@ public class JpaMappingsTest
 	@Resource
 	private ReviewRepository reviewRepo;
 	
+	@Resource
+	private CommentRepository commentRepo;
+	
 	
 	@Test
 	public void shouldSaveandLoadCategory()
@@ -185,5 +188,115 @@ public class JpaMappingsTest
 		Optional<Tag> result = tagRepo.findById(hotId);
 		hot = result.get();
 		assertThat(hot.getReviews(), containsInAnyOrder(dunkin, starbucks));
+	}
+	
+	@Test
+	public void shouldHaveTwoCommentsOnOneReview() {
+		Category coffee = new Category("Coffee");
+		Tag hot = new Tag("Hot");
+		coffee = categoryRepo.save(coffee);
+		hot = tagRepo.save(hot);
+		Review review = new Review("Test Review", "Stuff about review", "img", coffee, hot);
+		review = reviewRepo.save(review);
+		long reviewId = review.getId();
+		
+		Comment testComment1 = new Comment("Author", review, "Comment1");
+		testComment1 = commentRepo.save(testComment1);
+		long testComment1Id = testComment1.getId();
+		
+		Comment testComment2 = new Comment("Author2", review, "Comment2");
+		testComment2 = commentRepo.save(testComment2);
+		long testComment2Id = testComment2.getId();
+		
+		entityManager.flush();
+		entityManager.clear();
+		
+		Iterable<Comment> comments = commentRepo.findAll();
+		assertThat(comments, containsInAnyOrder(testComment1, testComment2));
+		
+		Optional<Comment> testComment1Result = commentRepo.findById(testComment1Id);
+		testComment1 = testComment1Result.get();
+		
+		Optional<Comment> testComment2Result = commentRepo.findById(testComment2Id);
+		testComment2 = testComment2Result.get();
+		
+		Optional<Review> reviewResult = reviewRepo.findById(reviewId);
+		review = reviewResult.get();
+		
+		assertThat(testComment1.getAuthor(), is("Author"));
+		assertThat(testComment2.getAuthor(), is("Author2"));
+		assertThat(testComment1.getReview(), is(review));
+		assertThat(testComment2.getReview(), is(review));
+		assertThat(review.getComment(), containsInAnyOrder(testComment1, testComment2));
+	}
+	
+	@Test
+	public void shouldRemoveOneCommentFromReview() {
+		Category coffee = new Category("Coffee");
+		Tag hot = new Tag("Hot");
+		coffee = categoryRepo.save(coffee);
+		hot = tagRepo.save(hot);
+		Review review = new Review("Test Review", "Stuff about review", "img", coffee, hot);
+		review = reviewRepo.save(review);
+		long reviewId = review.getId();
+		
+		Comment testComment1 = new Comment("Author", review, "Comment1");
+		testComment1 = commentRepo.save(testComment1);
+		long testComment1Id = testComment1.getId();
+		
+		entityManager.flush();
+		entityManager.clear();
+		
+		Optional<Comment> testComment1Result = commentRepo.findById(testComment1Id);
+		testComment1 = testComment1Result.get();
+		
+		Optional<Review> reviewResult = reviewRepo.findById(reviewId);
+		review = reviewResult.get();
+		
+		entityManager.remove(testComment1);
+		assertThat(commentRepo.count(), is(0L));
+	}
+	
+	@Test
+	public void shouldEstablishCommentToReviewRelationship()
+	{
+		Tag hot = tagRepo.save(new Tag("hot"));
+		Tag cold = tagRepo.save(new Tag("cold"));
+		Category coffee = categoryRepo.save(new Category("Coffee"));
+		Review starbucks = new Review("Starbucks", "Stuff about review", "img", coffee, hot);
+		starbucks = reviewRepo.save(starbucks);
+		long starbucksId = starbucks.getId();
+		
+		Comment testComment1 = new Comment("Author", starbucks, "Comment1");
+		testComment1 = commentRepo.save(testComment1);
+		long testComment1Id = testComment1.getId();
+
+		entityManager.flush();
+		entityManager.clear();
+		
+		Optional<Comment> testComment1Result = commentRepo.findById(testComment1Id);
+		testComment1 = testComment1Result.get();
+		assertThat(testComment1.getReview(), is(starbucks));
+	}
+	
+	@Test
+	public void shouldEstablishReviewToCommentRelationship() {
+		Tag hot = tagRepo.save(new Tag("hot"));
+		Tag cold = tagRepo.save(new Tag("cold"));
+		Category coffee = categoryRepo.save(new Category("Coffee"));
+		Review review = new Review("Test Review", "Stuff about review", "img", coffee, hot);
+		review = reviewRepo.save(review);
+		long reviewId = review.getId();
+		
+		Comment testComment1 = new Comment("Author", review, "Comment1");
+		testComment1 = commentRepo.save(testComment1);
+		long testComment1Id = testComment1.getId();
+
+		entityManager.flush();
+		entityManager.clear();
+		
+		Optional<Review> reviewResult = reviewRepo.findById(reviewId);
+		review = reviewResult.get();
+		assertThat(review.getComment(), contains(testComment1));
 	}
 }

@@ -20,6 +20,9 @@ public class ReviewController
 	
 	@Resource
 	TagRepository tagRepo;
+	
+	@Resource
+	CommentRepository commentRepo;
 
 	@RequestMapping("/review")
 	public String findOneReview(@RequestParam(value= "id")long reviewId, Model model) throws ReviewNotFoundException
@@ -80,6 +83,25 @@ public class ReviewController
 	{
 		model.addAttribute("tags", tagRepo.findAll());
 		return "tags";
+	}
+	
+	@RequestMapping("/comment")
+	public String findOneComment(@RequestParam(value = "id")long commentId, long reviewId, Model model) throws CommentNotFoundException {
+		Optional<Comment> comment = commentRepo.findById(commentId);
+		
+		if(comment.isPresent())
+		{
+			model.addAttribute("comments", comment.get());
+			return "comment";
+		}
+		throw new CommentNotFoundException();
+	}
+	
+	@RequestMapping("/show-comments")
+	public String findAllComments(Model model) 
+	{
+		model.addAttribute("comments", commentRepo.findAll());
+		return "comments";
 	}
 
 }

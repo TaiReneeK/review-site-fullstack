@@ -47,6 +47,12 @@ public class ReviewControllerTest
 	private Tag tag2;
 	
 	@Mock
+	private CommentRepository commentRepo;
+	
+	@Mock
+	private Comment comment1;
+	
+	@Mock
 	private Model model;
 	
 	@Before
@@ -72,6 +78,7 @@ public class ReviewControllerTest
 		when(reviewRepo.findAll()).thenReturn(allReviews);
 		
 		underTest.findAllReviews(model);
+		verify(model).addAttribute("reviews", allReviews);
 	}
 	
 	@Test
@@ -113,4 +120,5 @@ public class ReviewControllerTest
 		underTest.findAllTags(model);
 		verify(model).addAttribute("tags", allTags);
 	}
+	
 }

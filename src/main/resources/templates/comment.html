@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Comment</title>
+</head>
+<body>
+
+	<h2 th:text="'Reviews for: ' + ${comments.content}"></h2>
+
+	<div th:each="review: ${comments.reviews}">
+		<a th:href="@{/review(id=${review.id})}" th:text="${review.name}"></a>
+	</div>
+
+</body>
+</html>
